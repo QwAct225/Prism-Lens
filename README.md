@@ -1,72 +1,71 @@
-# ChicChoc
+# PrismLens
 
-research-radar-mlops/
+PrismLens is a comprehensive research visualization system designed to analyze and map MIT research trajectories using papers from the arXiv repository. By leveraging advanced topic modeling techniques with BERTopic, this project aims to provide insights into research trends, emerging topics, and evolution of scientific discourse within MIT-affiliated publications.
+
+## Project Structure
+```
+Prism-Lens/
 │
-├── .github/                    # GitHub Actions workflows untuk CI/CD
-│   └── workflows/
-│       ├── ci.yml              # Continuous Integration
-│       └── cd.yml              # Continuous Deployment
+├── src/                       # Source code
+│   └── data/                  # Data processing modules
+│       ├── __init__.py
+│       ├── preprocessing.py   # Text preprocessing functions
+│       └── scraper.py         # ArXiv data collection
 │
-├── data/                       # Direktori data (gitignored untuk file besar)
-│   ├── raw/                    # Data mentah hasil scraping
-│   ├── processed/              # Data yang sudah dibersihkan
-│   └── .gitignore              # Ignore file data besar
+├── venv/                      # Virtual environment
+│   ├── Lib/
+│   │   └── site-packages/
+│   └── Scripts/
+│       ├── activate
+│       ├── activate.bat
+│       ├── Activate.ps1
+│       ├── deactivate.bat
+│       ├── pip.exe
+│       ├── pip3.12.exe
+│       ├── pip3.exe
+│       ├── python.exe
+│       └── pythonw.exe
 │
-├── notebooks/                  # Jupyter notebooks untuk eksplorasi
-│   ├── 01_data_collection.ipynb
-│   ├── 02_data_exploration.ipynb
-│   └── 03_model_prototyping.ipynb
-│
-├── src/                        # Source code aplikasi
-│   ├── data/                   # Modul pengolahan data
-│   │   ├── _init_.py
-│   │   ├── scraper.py          # Kode untuk scraping data
-│   │   └── preprocessing.py    # Fungsi preprocessing
-│   │
-│   ├── models/                 # Modul model
-│   │   ├── _init_.py
-│   │   ├── train.py            # Kode untuk pelatihan model
-│   │   ├── evaluate.py         # Kode untuk evaluasi model
-│   │   └── predict.py          # Kode untuk prediksi
-│   │
-│   ├── visualization/          # Modul visualisasi
-│   │   ├── _init_.py
-│   │   └── dashboard.py        # Kode untuk dashboard
-│   │
-│   └── utils/                  # Fungsi-fungsi utilitas
-│       ├── _init_.py
-│       └── helpers.py          # Helper functions
-│
-├── tests/                      # Unit tests
-│   ├── test_scraper.py
-│   ├── test_preprocessing.py
-│   └── test_model.py
-│
-├── app/                        # Aplikasi web (API dan frontend)
-│   ├── api/                    # API endpoints
-│   │   ├── _init_.py
-│   │   └── routes.py
-│   │
-│   ├── static/                 # Static files
-│   └── templates/              # Template files
-│
-├── mlops/                      # MLOps tools dan konfigurasi
-│   ├── docker/                 # Dockerfile dan docker-compose
-│   │   ├── Dockerfile
-│   │   └── docker-compose.yml
-│   │
-│   ├── monitoring/             # Monitoring tools
-│   │   └── prometheus/
-│   │
-│   └── deployment/             # Deployment scripts
-│       └── kubernetes/
-│
-├── configs/                    # Konfigurasi aplikasi
-│   └── model_config.yaml
-│
-├── requirements.txt            # Dependencies
-├── setup.py                    # Package setup
-├── run_scraper.py              # Run Scrapping Data
-├── Makefile                    # Automation commands
-├── .gitignore                  # Git ignore file
-└── README.md                   # Dokumentasi project
+├── arxiv_titles_raw.csv       # Raw dataset
+├── README.md                  # Project documentation
+├── requirements.txt           # Dependencies
+├── run_scraper.py             # Script to run the scraper
+└── pyvenv.cfg                 # Python venv configuration
+```
+
+## Getting Started
+
+1. **Clone the repository**
+
+    ```bash
+    git clone https://github.com/your-username/prism-lens.git
+    cd prism-lens
+    ```
+
+2. **Prerequisites**
+
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Linux/Mac
+    venv\Scripts\activate     # Windows
+    ```
+
+3. **Install dependencies**
+
+    ```bash
+    pip install -r requirements.txt
+    python -m nltk.downloader stopwords wordnet
+    ```
+   
+4. **Running the Scraper**
+
+    ```bash
+    python run_scraper.py
+    ```
+## Technologies
+
+- **Python**: Primary programming language
+- **BeautifulSoup/Selenium**: Web scraping framework for ArXiv data collection
+- **NLTK**: Natural Language Toolkit for text preprocessing and cleaning
+- **BERTopic**: State-of-the-art topic modeling based on BERT embeddings
+
