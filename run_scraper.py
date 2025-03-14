@@ -1,27 +1,23 @@
 import asyncio
 import csv
-from src.data import ArXivScraper, TextCleaner
+from src.data import ArXivScraper
 
 async def main():
-    # Initialize components
+    # Initialize scraper
     scraper = ArXivScraper()
-    cleaner = TextCleaner()
     
     # Run scraping pipeline
     print("Memulai proses scraping...")
-    raw_titles = await scraper.crawl_all()
-    
-    # Clean data
-    print("\nMembersihkan data...")
-    cleaned_titles = cleaner.clean_batch(raw_titles)
+    papers = await scraper.crawl_all()
     
     # Save to CSV
-    with open('arxiv_titles_raw.csv', 'w', newline='', encoding='utf-8') as f:
+    with open('arxiv_papers_raw.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['Number', 'Title'])
-        writer.writerows(enumerate(cleaned_titles, 1))
+        writer.writerow(['Title', 'Authors'])
+        for title, authors in papers:
+            writer.writerow([title, authors])
     
-    print(f"\nBerhasil menyimpan {len(cleaned_titles)} judul ke arxiv_titles_raw.csv")
+    print(f"\nBerhasil menyimpan {len(papers)} paper ke arxiv_papers_raw.csv")
 
 if __name__ == "__main__":
     asyncio.run(main())
