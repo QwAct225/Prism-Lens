@@ -7,8 +7,12 @@ from wordcloud import WordCloud
 import numpy as np
 import os
 
-def save_plot(fig, filename, save_dir="../data/plots"):
+def save_plot(fig, filename, save_dir=None):
     """Save the given figure to the specified directory."""
+    if save_dir is None:
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))  
+        save_dir = os.path.join(base_dir, "data", "plots") 
+
     os.makedirs(save_dir, exist_ok=True)  
     filepath = os.path.join(save_dir, filename)
     fig.savefig(filepath, bbox_inches="tight", dpi=300)
