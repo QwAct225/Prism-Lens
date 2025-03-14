@@ -12,21 +12,8 @@ Prism-Lens/
 │       ├── preprocessing.py   # Text preprocessing functions
 │       └── scraper.py         # ArXiv data collection
 │
-├── venv/                      # Virtual environment
-│   ├── Lib/
-│   │   └── site-packages/
-│   └── Scripts/
-│       ├── activate
-│       ├── activate.bat
-│       ├── Activate.ps1
-│       ├── deactivate.bat
-│       ├── pip.exe
-│       ├── pip3.12.exe
-│       ├── pip3.exe
-│       ├── python.exe
-│       └── pythonw.exe
-│
-├── arxiv_titles_raw.csv       # Raw dataset
+├── .gitignore                 # Ignore unnecessary file
+├── arxiv_papers_raw.csv       # Raw dataset
 ├── README.md                  # Project documentation
 ├── requirements.txt           # Dependencies
 ├── run_scraper.py             # Script to run the scraper
