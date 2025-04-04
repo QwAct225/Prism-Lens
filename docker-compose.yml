@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   arxiv-api:
@@ -7,14 +7,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Mount the code for live reload
       - ./api:/app/api
       - ./scripts:/app/scripts
       - ./src:/app/src
-      # Mount data directory to persist data
       - ./data:/app/data
     environment:
       - API_HOST=0.0.0.0
       - API_PORT=8000
     restart: unless-stopped
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    command: python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
