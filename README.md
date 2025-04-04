@@ -49,6 +49,28 @@ Prism-Lens/
     ```bash
     python run_scraper.py
     ```
+     
+5. **Running API Locally**
+
+    ```bash
+    uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    ```
+     
+6. **Using Docker Build and start the containers**
+
+    ```bash
+    docker-compose up --build
+    ```
+   
+6. **Access API Endpoint (For Swagger UI documentation)**
+
+   ```bash
+    http://localhost:8000/docs
+    ```
+   or (For ReDoc documentation)
+    ```bash
+    http://localhost:8000/redoc
+    ```
 ## Technologies
 
 - **Python**: Primary programming language

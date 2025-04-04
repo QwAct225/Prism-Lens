@@ -1,0 +1,67 @@
+Index: Dockerfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dockerfile b/Dockerfile
+--- a/Dockerfile	(revision af2b643a294e7844aa01d355f6dae35f61b040bb)
++++ b/Dockerfile	(date 1743757645109)
+@@ -1,0 +1,27 @@
++                                                                                  FROM python:3.9-slim
++
++WORKDIR /app
++
++# Install system dependencies
++RUN apt-get update && apt-get install -y --no-install-recommends \
++    build-essential \
++    && rm -rf /var/lib/apt/lists/*
++
++# Copy requirements first to leverage Docker cache
++COPY requirements.txt .
++RUN pip install --no-cache-dir -r requirements.txt
++
++# Copy the entire project
++COPY . .
++
++# Make sure scripts directory is executable
++RUN chmod +x scripts/*.py
++
++# Create necessary directories if they don't exist
++RUN mkdir -p data/plots data/jobs
++
++# Expose port for the API
++EXPOSE 8000
++
++# Command to run the application
++CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+\ No newline at end of file
+Index: docker-compose.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docker-compose.yml b/docker-compose.yml
+--- a/docker-compose.yml	(revision af2b643a294e7844aa01d355f6dae35f61b040bb)
++++ b/docker-compose.yml	(date 1743757654768)
+@@ -1,0 +1,20 @@
++                        version: '3.8'
++
++services:
++  arxiv-api:
++    build: .
++    container_name: arxiv-api
++    ports:
++      - "8000:8000"
++    volumes:
++      # Mount the code for live reload
++      - ./api:/app/api
++      - ./scripts:/app/scripts
++      - ./src:/app/src
++      # Mount data directory to persist data
++      - ./data:/app/data
++    environment:
++      - API_HOST=0.0.0.0
++      - API_PORT=8000
++    restart: unless-stopped
++    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+\ No newline at end of file

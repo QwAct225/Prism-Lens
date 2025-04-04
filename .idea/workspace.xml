@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6891dfae-5390-4910-aa3a-2518d450ec67" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/Prism-Lens.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/models/papers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/routers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/routers/scraping.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/routers/visualization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/services/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/services/scraping.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/services/visualization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/utils/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/utils/file_utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-    </list>
+    <list default="true" id="6891dfae-5390-4910-aa3a-2518d450ec67" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,11 +64,27 @@
       <option name="presentableId" value="Default" />
       <updated>1743728217528</updated>
       <workItem from="1743728218724" duration="9591000" />
-      <workItem from="1743754112733" duration="3322000" />
+      <workItem from="1743754112733" duration="4376000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(api): add API endpoint configurationusing FastAPI" />
+    <MESSAGE value="feat(api): add API endpoint configurationusing FastAPI" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(api): add API endpoint configurationusing FastAPI" />
   </component>
 </project>
