@@ -71,10 +71,70 @@ Prism-Lens/
     ```bash
     http://localhost:8000/redoc
     ```
+   
+## API Examples
+
+### 1. Get Dataset Statistics
+
+**Request:**
+GET http://localhost:8000/api/visualization/stats
+
+**Response:**
+```json
+{
+  "total_papers": 5839,
+  "unique_authors": 12571,
+  "average_authors_per_paper": 3.7355711594451106,
+  "average_title_length": 69.38225723582805
+}
+```
+
+### 2.  List Available Plots
+
+**Request:**
+GET http://localhost:8000/api/visualization/plots
+
+**Response:**
+```json
+[
+  "author_word_cloud.png",
+  "authors_per_paper.png",
+  "title_length_distribution.png",
+  "top_authors.png",
+  "word_cloud.png",
+  "word_frequency.png"
+]
+```
+
+### 3.  Get Papers with Search and Pagination
+
+**Request:**
+GET http://localhost:8000/api/visualization/papers?limit=2&search=quantum
+
+**Response:**
+```json
+[
+  {
+    "title": "Quantum Computing: A New Era in Information Processing",
+    "authors": ["Smith, John", "Johnson, Anna", "Zhang, Wei"],
+    "cleaned_title": "quantum computing new era information processing",
+    "cleaned_authors": ["smith john", "johnson anna", "zhang wei"]
+  },
+  {
+    "title": "Advances in Quantum Field Theory Applications",
+    "authors": ["Brown, Robert", "Davis, Emily"],
+    "cleaned_title": "advances quantum field theory applications",
+    "cleaned_authors": ["brown robert", "davis emily"]
+  }
+]
+```
+
 ## Technologies
 
 - **Python**: Primary programming language
-- **BeautifulSoup/Selenium**: Web scraping framework for ArXiv data collection
+- **BeautifulSoup**: Web scraping framework for ArXiv data collection
 - **NLTK**: Natural Language Toolkit for text preprocessing and cleaning
 - **BERTopic**: State-of-the-art topic modeling based on BERT embeddings
+- **FastAPI**: Lightweight web framework used for building RESTful APIs
+- **Docker**: Containerization tool used to package and deploy the application
 
