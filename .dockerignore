@@ -1,0 +1,5 @@
+# .dockerignore
+data/plots/*.png  # Exclude generated images
+__pycache__/
+*.pyc
+.env
