@@ -12,8 +12,8 @@ class ArXivScraper:
                     return await response.text()
                 return None
 
-    async def crawl_page(self, start: int, size: int = 200) -> Optional[List[Tuple[str, str]]]:
-        """Crawl individual arXiv page and extract titles with authors"""
+    async def crawl_page(self, start: int, size: int = 200) -> Optional[List[Tuple[str, str, str]]]:
+        """Crawl individual arXiv page dan ekstrak title, authors, abstract"""
         url = f"https://arxiv.org/search/?query=MIT&searchtype=all&abstracts=show&order=-announced_date_first&size={size}&date-date_type=submitted_date&start={start}"
         html = await self.fetch_page(url)
         
@@ -26,29 +26,32 @@ class ArXivScraper:
         if results_message and "No results" in results_message.text:
             return []
             
-        # Extract titles and authors
         papers = []
         for result in soup.select('li.arxiv-result'):
             title = result.select_one('p.title.is-5.mathjax')
+            if not title:
+                continue
+            clean_title = title.get_text(strip=True).replace("Title:", "")
+
             authors = result.select_one('p.authors')
-            
-            if title and authors:
-                # Clean title
-                clean_title = title.get_text(strip=True).replace("Title:", "")
-                
-                # Extract author names
+            if not authors:
+                clean_authors = "N/A"
+            else:
                 author_names = [
                     a.get_text(strip=True) 
                     for a in authors.select('a[href*="searchtype=author"]')
                 ]
                 clean_authors = ", ".join(author_names)
-                
-                papers.append((clean_title, clean_authors))
+
+            abstract = result.select_one('span.abstract-full')
+            clean_abstract = abstract.get_text(strip=True).replace("△ Less", "") if abstract else "N/A"
+            
+            papers.append((clean_title, clean_authors, clean_abstract))
                 
         return papers
 
-    async def crawl_all(self) -> List[Tuple[str, str]]:
-        """Paginated crawling with auto-stop"""
+    async def crawl_all(self) -> List[Tuple[str, str, str]]:
+        """Paginated crawling dengan auto-stop"""
         all_papers = []
         start = 0
         page = 1

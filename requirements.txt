@@ -1,6 +1,6 @@
 Crawl4AI==0.4.247
 python-dotenv==1.0.1
-pydantic==2.10.
+pydantic==2.10
 pydantic-settings
 beautifulsoup4>=4.12.2
 nltk>=3.8.1
@@ -12,7 +12,4 @@ nltk
 wordcloud
 matplotlib
 scikit-learn
-transformers
-torch
-sentence-transformers
 uvicorn[standard]
