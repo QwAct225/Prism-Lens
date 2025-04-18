@@ -1,30 +1,51 @@
-import pandas as pd
-import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.data.preprocessing import TextCleaner
+import sys
+import logging
+import traceback
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
+from src.data.preprocessing import JSONPreprocessor
 
-input_file = "arxiv_papers_raw.csv"
-output_file = "arxiv_papers_cleaned.csv"
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('preprocessing.log'),
+        logging.StreamHandler()
+    ]
+)
 
-print("Loading data...")
-df = pd.read_csv(input_file)
+def main():
+    try:
+        BASE_DIR = Path(__file__).parent.parent
+        INPUT_PATH = BASE_DIR / 'data/raw/arxiv_papers_raw.csv'
+        OUTPUT_DIR = BASE_DIR / 'data/processed'
+        OUTPUT_PATH = OUTPUT_DIR / 'arxiv_papers_processed.json'
+        
+        if not INPUT_PATH.exists():
+            raise FileNotFoundError(f"Input file not found: {INPUT_PATH}")
+            
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+        processor = JSONPreprocessor()
+        
+        logging.info("Starting preprocessing...")
+        logging.info(f"Input: {INPUT_PATH}")
+        logging.info(f"Output: {OUTPUT_PATH}")
+        
+        processor.process_to_json(
+            input_csv=str(INPUT_PATH),
+            output_json=str(OUTPUT_PATH)
+        )
+        
+        logging.info("Preprocessing completed successfully")
+        logging.info(f"Output file size: {OUTPUT_PATH.stat().st_size} bytes")
+        
+    except Exception as e:
+        logging.error(f"Error occurred: {str(e)}")
+        logging.error(traceback.format_exc())
+        sys.exit(1)
 
-cleaner = TextCleaner()
-
-print("Cleaning data...")
-cleaned_df = cleaner.clean_batch(df)
-
-final_df = cleaned_df[[
-    'ID',
-    'cleaned_title', 
-    'cleaned_authors', 
-    'cleaned_abstract'
-]].rename(columns={
-    'cleaned_title': 'Title',
-    'cleaned_authors': 'Authors',
-    'cleaned_abstract': 'Abstract'
-})
-
-final_df.to_csv(output_file, index=False)
-print(f"Preprocessing complete! Cleaned file saved as: {output_file}")
+if __name__ == "__main__":
+    main()

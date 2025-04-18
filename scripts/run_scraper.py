@@ -1,5 +1,6 @@
 import asyncio
 import csv
+from datetime import datetime
 import os
 import sys
 
@@ -10,17 +11,29 @@ from src.data.scraper import ArXivScraper
 
 async def main():
     scraper = ArXivScraper()
-
-    print("Memulai proses scraping...")
-    papers = await scraper.crawl_all()
-
-    with open('arxiv_papers_raw.csv', 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(['ID', 'Title', 'Authors', 'Abstract'])
-        for idx, (title, authors, abstract) in enumerate(papers, 1):
-            writer.writerow([idx, title, authors, abstract])
+    papers = await scraper.crawl_papers()
     
-    print(f"\nBerhasil menyimpan {len(papers)} paper ke arxiv_papers_raw.csv")
+    paper_with_id = []
+    for idx, paper_dict in enumerate(papers, 1):
+        paper_dict["ID"] = idx
+        paper_with_id.append(paper_dict)
+    
+    with open('arxiv_papers_raw.csv', 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            "ID",
+            "Title",
+            "Authors", 
+            "Abstract",
+            "Journal_Conference_Name",
+            "Publisher",
+            "Year",
+            "DOI",
+            "Group_Name"
+        ])
+        writer.writeheader()
+        writer.writerows(paper_with_id)
+    
+    print(f"Data tersimpan di {len([paper_with_id])} paper")
 
 if __name__ == "__main__":
     asyncio.run(main())
