@@ -1,0 +1,7 @@
+[core]
+    remote = storage
+['remote "storage"']
+    url = gdrive://1yC84AblN7spzvKCThoWaSpxIewT3qtXk
+    gdrive_use_service_account = true
+    gdrive_service_account_json_file_path = ../dvc-service-account.json
+    gdrive_service_account_user_email = dvc-drive-access@tidy-etching-457205-p9.iam.gserviceaccount.com
