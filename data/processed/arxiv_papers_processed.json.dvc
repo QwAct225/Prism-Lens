@@ -1,5 +1,0 @@
-outs:
-- md5: 4d406faf3a3f8412fe12340f23f8b50d
-  size: 8224280
-  hash: md5
-  path: arxiv_papers_processed.json

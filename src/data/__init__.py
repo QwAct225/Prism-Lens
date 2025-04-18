@@ -1,4 +1,4 @@
 from .scraper import ArXivScraper
-from .preprocessing import TextCleaner
+from .preprocessing import JSONPreprocessor
 
-__all__ = ['ArXivScraper', 'TextCleaner']
+__all__ = ['ArXivScraper', 'JSONPreprocessor']
