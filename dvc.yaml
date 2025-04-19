@@ -1,8 +1,9 @@
 stages:
   preprocess:
-    cmd: python run_preprocessing.py
+    cmd: python scripts/run_preprocessing.py
     deps:
       - data/raw/arxiv_papers_raw.csv
       - src/data/preprocessing.py
+      - scripts/run_preprocessing.py
     outs:
       - data/processed/arxiv_papers_processed.json

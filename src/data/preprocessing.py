@@ -6,7 +6,7 @@ from typing import Dict, Any
 class JSONPreprocessor:
     def __init__(self):
         self.required_columns = [
-            'Title', 'Authors', 'Abstract',
+            'ID', 'Title', 'Authors', 'Abstract',
             'Journal_Conference_Name', 'Publisher',
             'Year', 'DOI', 'Group_Name'
         ]
@@ -19,6 +19,7 @@ class JSONPreprocessor:
         """Pembersihan data dengan error handling"""
         try:
             return {
+                "id": str(row.get('ID', '')).strip(),
                 "title": str(row.get('Title', '')).strip(),
                 "abstract": str(row.get('Abstract', '')).strip(),
                 "authors": self._clean_authors(row.get('Authors', '')),
@@ -48,15 +49,12 @@ class JSONPreprocessor:
     def process_to_json(self, input_csv: str, output_json: str):
         """Proses utama dengan validasi data"""
         try:
-            # Baca data
             df = pd.read_csv(input_csv, keep_default_na=False)
             
-            # Validasi kolom
             missing_cols = [col for col in self.required_columns if col not in df.columns]
             if missing_cols:
                 raise ValueError(f"Missing required columns: {missing_cols}")
             
-            # Proses data
             processed_data = []
             for _, row in df.iterrows():
                 if self._validate_row(row):
@@ -64,7 +62,6 @@ class JSONPreprocessor:
                     if cleaned:
                         processed_data.append(cleaned)
             
-            # Simpan ke JSON
             with open(output_json, 'w', encoding='utf-8') as f:
                 json.dump(
                     processed_data,
