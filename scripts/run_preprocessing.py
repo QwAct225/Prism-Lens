@@ -6,7 +6,6 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from src.data.preprocessing import JSONPreprocessor
 
-# Setup logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
