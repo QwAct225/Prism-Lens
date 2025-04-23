@@ -1,66 +1,87 @@
+import mlflow
 import pandas as pd
-import os
-import sys
-import gc
-import numpy as np
-from tqdm import tqdm
+from src.data.topic_modelling import (
+    train_bertopic_model, print_top_keywords, reduce_topics,
+    calculate_coherence_score, save_visualizations
+)
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.data.topic_modelling import train_bertopic_model, print_top_keywords, reduce_topics, calculate_coherence_score, save_visualizations
+def find_optimal_configuration(titles, embedding_models=None, topic_numbers=None):
+    if embedding_models is None:
+        embedding_models = ["all-MiniLM-L6-v2", "all-mpnet-base-v2"]
+    
+    if topic_numbers is None:
+        topic_numbers = [10, 15, 20, 25, 30]
+    
+    results = []
+    
+    for emb_model in embedding_models:
+        model, topics = train_bertopic_model(titles, embedding_model_name=emb_model)
+        
+        for n_topics in topic_numbers:
+            print(f"Testing {emb_model} with {n_topics} topics")
+            reduced_model = reduce_topics(model, titles, nr_topics=n_topics)
+            
+            tokenized_titles = [title.split() for title in titles]
+            coherence = calculate_coherence_score(reduced_model, tokenized_titles)
+            
+            results.append({
+                "embedding_model": emb_model,
+                "n_topics": n_topics,
+                "coherence": coherence
+            })
+            
+            print(f"Coherence: {coherence}")
+    
+    # Find best configuration
+    best_result = max(results, key=lambda x: x["coherence"])
+    print(f"Best configuration: {best_result}")
+    
+    return results, best_result
 
 def main():
-    print("Starting topic modeling pipeline...")
+    mlflow.set_experiment("Prism Lens")
     
-    # Load data with sample limit
-    print("Loading data...")
-    df = pd.read_csv("../data/arxiv_papers_cleaned.csv")
-    
-    # Limit to a sample of documents (start with a smaller number to test)
-    sample_size = 5000
-    if len(df) > sample_size:
-        df = df.sample(sample_size, random_state=42)
-        print(f"Sampled {sample_size} documents from dataset")
-    
-    titles = df["Title"].dropna().tolist()
-    print(f"Processing {len(titles)} documents")
-    
-    # Train model with progress feedback
-    print("Training BERTopic model...")
-    model, topics = train_bertopic_model(titles)
-    
-    # Free up memory
-    del df
-    gc.collect()
-    
-    # Reduce the number of topics
-    print("Reducing topics...")
-    model = reduce_topics(model, titles, nr_topics=20)
-    
-    # Save the model
-    print("Saving model...")
-    save_path = "../data/bertopic_model"
-    model.save(save_path)
-    
-    # Print top keywords of each topic
-    print("\nTop keywords for each topic:")
-    print_top_keywords(model)
-    
-    # Handle visualizations one by one with memory management
-    print("\nGenerating visualizations (one at a time)...")
-    save_visualizations(model, one_by_one=True)
-    
-    # Calculate coherence score with a smaller sample if needed
-    print("\nCalculating coherence score...")
-    coherence_sample = titles
-    if len(titles) > 2000:  # Limit coherence calculation to 2000 docs if needed
-        coherence_sample = titles[:2000]
-        print(f"Using {len(coherence_sample)} documents for coherence calculation")
-    
-    tokenized_titles = [title.split() for title in coherence_sample]
-    coherence = calculate_coherence_score(model, tokenized_titles)
-    print(f"Coherence Score: {coherence}")
-    
-    print("Topic modeling completed successfully!")
+    with mlflow.start_run():
+        # Log parameters
+        sample_size = 5000
+        mlflow.log_param("sample_size", sample_size)
+        
+        # Load data
+        df = pd.read_csv("../data/arxiv_papers_cleaned.csv")
+        if len(df) > sample_size:
+            df = df.sample(sample_size, random_state=42)
+        
+        titles = df["Title"].dropna().tolist()
+        
+        # Experiment with different configurations
+        embedding_models = ["all-MiniLM-L6-v2", "all-mpnet-base-v2"]
+        topic_numbers = [10, 15, 20, 25, 30]
+        mlflow.log_param("embedding_models", embedding_models)
+        mlflow.log_param("topic_numbers", topic_numbers)
+        
+        results, best_result = find_optimal_configuration(titles, embedding_models, topic_numbers)
+        
+        # Log results and best configuration
+        for result in results:
+            mlflow.log_metric(f"coherence_{result['embedding_model']}_{result['n_topics']}", result["coherence"])
+        
+        mlflow.log_param("best_embedding_model", best_result["embedding_model"])
+        mlflow.log_param("best_n_topics", best_result["n_topics"])
+        mlflow.log_metric("best_coherence", best_result["coherence"])
+        
+        # Train and save the best model
+        best_model, _ = train_bertopic_model(titles, embedding_model_name=best_result["embedding_model"])
+        best_model = reduce_topics(best_model, titles, nr_topics=best_result["n_topics"])
+        
+        save_path = "../data/bertopic_model_best"
+        best_model.save(save_path)
+        mlflow.log_artifact(save_path, artifact_path="models")
+        
+        # Save visualizations for the best model
+        save_visualizations(best_model, output_dir="../data/plots", one_by_one=True)
+        mlflow.log_artifacts("../data/plots", artifact_path="visualizations")
+        
+        print("Optimal topic modeling completed successfully!")
 
 if __name__ == "__main__":
     main()
