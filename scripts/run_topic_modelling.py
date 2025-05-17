@@ -1,4 +1,5 @@
 import mlflow
+import os
 import pandas as pd
 from src.data.topic_modelling import (
     train_bertopic_model, print_top_keywords, reduce_topics,
@@ -47,11 +48,14 @@ def main():
         mlflow.log_param("sample_size", sample_size)
         
         # Load data
-        df = pd.read_csv("../data/arxiv_papers_cleaned.csv")
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # dari scripts/
+        csv_path = os.path.join(BASE_DIR, "data", "processed", "arxiv_papers_cleaned.csv")
+        df = pd.read_csv(csv_path)
+
         if len(df) > sample_size:
             df = df.sample(sample_size, random_state=42)
         
-        titles = df["Title"].dropna().tolist()
+        titles = df["title"].dropna().tolist()
         
         # Experiment with different configurations
         embedding_models = ["all-MiniLM-L6-v2", "all-mpnet-base-v2"]
@@ -73,7 +77,13 @@ def main():
         best_model, _ = train_bertopic_model(titles, embedding_model_name=best_result["embedding_model"])
         best_model = reduce_topics(best_model, titles, nr_topics=best_result["n_topics"])
         
-        save_path = "../data/bertopic_model_best"
+        # Ensure save directory exists
+        save_path = '../data/bertopic_model_best'
+        save_dir = os.path.dirname(save_path)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        # Save the model
         best_model.save(save_path)
         mlflow.log_artifact(save_path, artifact_path="models")
         

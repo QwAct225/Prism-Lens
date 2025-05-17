@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 import os
 from fastapi.responses import FileResponse
 
-from api.models.papers import VisualizationResponse, PaperResponse
+from api.models.papers import PaperResponse
 from api.services.visualization import VisualizationService
 
 router = APIRouter()
@@ -35,7 +35,7 @@ async def get_plot(plot_name: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/papers", response_model=List[PaperResponse])
+@router.get("/papers")
 async def get_papers(
     limit: int = Query(10, description="Maximum number of papers to return"),
     skip: int = Query(0, description="Number of papers to skip"),

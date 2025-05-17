@@ -31,11 +31,19 @@ class ScrapingStatus(BaseModel):
     class Config:
         orm_mode = True
 
+class Author(BaseModel):
+    name: str
+
 class PaperResponse(BaseModel):
+    id: str
     title: str
     authors: List[str]
-    cleaned_title: Optional[str] = None
-    cleaned_authors: Optional[List[str]] = None
+    abstract: Optional[str] = None
+    journal: Optional[str] = None
+    publisher: Optional[str] = None
+    year: Optional[str] = None
+    doi: Optional[str] = None
+    research_group: Optional[str] = None
 
 class VisualizationResponse(BaseModel):
     plot_url: str
