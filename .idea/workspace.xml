@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6891dfae-5390-4910-aa3a-2518d450ec67" name="Changes" comment="feat(api): add API endpoint configurationusing FastAPI">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/models/papers.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/models/papers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/routers/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/routers/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/services/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/services/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/embeddings.npy" beforeDir="false" afterPath="$PROJECT_DIR$/data/embeddings.npy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/jobs/3f7cfa49-fb91-40e9-87b5-a118730846f8.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_preprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run_scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_scraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/run_topic_modelling.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_topic_modelling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/embedding.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/embedding.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +102,7 @@
       <workItem from="1747479408614" duration="315000" />
       <workItem from="1747479736921" duration="2203000" />
       <workItem from="1747482211899" duration="223000" />
-      <workItem from="1747487335658" duration="9993000" />
+      <workItem from="1747487335658" duration="10288000" />
     </task>
     <servers />
   </component>

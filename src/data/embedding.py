@@ -16,7 +16,7 @@ class BERTEmbedder:
             outputs = self.model(**inputs)
         return outputs.last_hidden_state[:, 0, :].squeeze().numpy()  # CLS token embedding
 
-    def embed_titles(self, df, text_column="Title"):
+    def embed_titles(self, df, text_column="title"):
         """Embed all titles in the dataframe and return numpy array."""
         embeddings = np.array([self.embed_text(title) for title in df[text_column]])
         return embeddings
