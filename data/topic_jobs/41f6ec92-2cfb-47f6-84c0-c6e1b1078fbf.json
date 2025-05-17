@@ -1,0 +1,13 @@
+{
+  "job_id": "41f6ec92-2cfb-47f6-84c0-c6e1b1078fbf",
+  "status": "failed",
+  "created_at": "2025-04-15T21:20:40.805222",
+  "request": {
+    "num_topics": 20,
+    "sample_size": 5000
+  },
+  "progress": 0.0,
+  "updated_at": "2025-04-15T21:20:40.833775",
+  "error": "Traceback (most recent call last):\n  File \"C:\\Danann\\1. Projects\\2. Machine Learning\\Python\\Prism-Lens\\scripts\\run_topic_modelling.py\", line 1, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'\n",
+  "completed_at": "2025-04-15T21:20:40.833775"
+}

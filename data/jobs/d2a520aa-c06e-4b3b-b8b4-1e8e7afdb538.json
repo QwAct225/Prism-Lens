@@ -1,0 +1,22 @@
+{
+  "job_id": "d2a520aa-c06e-4b3b-b8b4-1e8e7afdb538",
+  "status": "completed",
+  "created_at": "2025-05-17T15:05:49.010520",
+  "updated_at": "2025-05-17T15:05:50.225584",
+  "completed_at": "2025-05-17T15:05:50.225597",
+  "request": {
+    "query": "string",
+    "max_results": 100,
+    "categories": [
+      "string"
+    ],
+    "date_from": "string",
+    "date_to": "string",
+    "preprocess": true
+  },
+  "progress": 100.0,
+  "total_items": 0,
+  "processed_items": 0,
+  "results_file": null,
+  "error": null
+}
