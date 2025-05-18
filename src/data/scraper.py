@@ -1,132 +1,137 @@
-import aiohttp
+import arxiv
 import asyncio
-from bs4 import BeautifulSoup
+import time
+from typing import List, Dict, Optional
 import re
-from typing import List, Dict, Optional, Set, Tuple
-from urllib.parse import urljoin
 
 class ArXivScraper:
-    BASE_URL = "https://arxiv.org/search/?query=MIT&searchtype=all&abstracts=show&order=-announced_date_first&size=200&date-date_type=submitted_date&start=0"
-    
-    async def fetch_page(self, url: str) -> Optional[str]:
-        """Fetch HTML content from URL"""
-        async with aiohttp.ClientSession() as session:
+    def __init__(self):
+        self.client = arxiv.Client(
+            page_size=100,
+            delay_seconds=3.0,
+            num_retries=5
+        )
+        
+    async def search_papers(self, query="MIT", max_results=None, 
+                           categories=None, date_from=None, date_to=None):
+        search_query = query
+        
+        if categories and isinstance(categories, list) and len(categories) > 0:
+            cat_query = " OR ".join([f"cat:{cat}" for cat in categories])
+            search_query = f"({search_query}) AND ({cat_query})"
+        
+        date_filters = []
+        if date_from:
             try:
-                async with session.get(url, timeout=30) as response:
-                    if response.status == 200:
-                        return await response.text()
-                    print(f"Error fetching {url}: Status {response.status}")
-                    return None
+                date_filters.append(f"submittedDate:[{date_from}0000 TO *]")
+            except:
+                pass
+        
+        if date_to:
+            try:
+                date_filters.append(f"submittedDate:[* TO {date_to}2359]")
+            except:
+                pass
+        
+        if date_filters:
+            date_query = " AND ".join(date_filters)
+            search_query = f"({search_query}) AND ({date_query})"
+        
+        if max_results is None or max_results <= 0:
+            max_results = 10000  
+            
+        print(f"Mencari paper dengan query: '{search_query}'")
+        
+        return await asyncio.to_thread(self._fetch_papers, search_query, max_results)
+        
+    def _fetch_papers(self, search_query, max_results):
+        """
+        Mengambil paper dari API ArXiv
+        """
+        search = arxiv.Search(
+            query=search_query,
+            max_results=max_results,
+            sort_by=arxiv.SortCriterion.SubmittedDate,
+            sort_order=arxiv.SortOrder.Descending
+        )
+        
+        try:
+            print("Mengambil paper dari ArXiv API...")
+            
+            papers = []
+            for i, result in enumerate(self.client.results(search)):
+                paper_dict = {
+                    "Title": result.title.replace("\n", " ").strip(),
+                    "Authors": ", ".join([author.name for author in result.authors]),
+                    "Abstract": result.summary.replace("\n", " ").strip(),
+                    "Journal_Conference_Name": result.journal_ref if hasattr(result, 'journal_ref') and result.journal_ref else "N/A",
+                    "Publisher": "arXiv",
+                    "Year": self._extract_year(result.published) if hasattr(result, 'published') else "N/A",
+                    "DOI": result.doi if hasattr(result, 'doi') and result.doi else "N/A",
+                    "Group_Name": result.primary_category if hasattr(result, 'primary_category') else "N/A"
+                }
+                
+                papers.append(paper_dict)
+                
+                if (i+1) % 100 == 0:
+                    print(f"Telah mengambil {i+1} paper...")
+                
+                if i+1 >= max_results:
+                    break
+                    
+                if (i+1) % 50 == 0:
+                    time.sleep(1)
+            
+            print(f"Berhasil mengambil {len(papers)} paper dari ArXiv API")
+            return papers
+            
+        except Exception as e:
+            print(f"Error mengambil paper: {str(e)}")
+            time.sleep(10)
+            try:
+                print("Mencoba kembali...")
+                papers = []
+                for result in self.client.results(search):
+                    paper_dict = {
+                        "Title": result.title.replace("\n", " ").strip(),
+                        "Authors": ", ".join([author.name for author in result.authors]),
+                        "Abstract": result.summary.replace("\n", " ").strip(),
+                        "Journal_Conference_Name": result.journal_ref if hasattr(result, 'journal_ref') and result.journal_ref else "N/A",
+                        "Publisher": "arXiv",
+                        "Year": self._extract_year(result.published) if hasattr(result, 'published') else "N/A",
+                        "DOI": result.doi if hasattr(result, 'doi') and result.doi else "N/A",
+                        "Group_Name": result.primary_category if hasattr(result, 'primary_category') else "N/A"
+                    }
+                    papers.append(paper_dict)
+                    
+                    if len(papers) >= max_results:
+                        break
+                
+                return papers
             except Exception as e:
-                print(f"Exception while fetching {url}: {e}")
-                return None
-
-    async def get_paper_links(self, start: int, size: int = 200) -> Optional[List[Tuple[str, str, str]]]:
-        """Get links to individual paper pages from search results"""
-        url = f"https://arxiv.org/search/?query=MIT&searchtype=all&abstracts=show&order=-announced_date_first&size={size}&date-date_type=submitted_date&start={start}"
-        html = await self.fetch_page(url)
+                print(f"Gagal mengambil paper setelah percobaan ulang: {str(e)}")
+                return []
+    
+    def _extract_year(self, published_date):
+        """Ekstrak tahun dari tanggal publikasi"""
+        if published_date:
+            year_match = re.search(r'(\d{4})', str(published_date))
+            if year_match:
+                return year_match.group(1)
+        return "N/A"
+    
+    async def crawl_papers(self, query="MIT", max_results=None, categories=None, 
+                          date_from=None, date_to=None) -> List[Dict]:
+        """Ambil paper dari ArXiv API"""
+        print(f"Mengambil data dengan query: {query}, max_results: {max_results if max_results else 'ALL'}...")
         
-        if not html:
-            return []
-            
-        soup = BeautifulSoup(html, 'html.parser')
-        results_message = soup.select_one('h1.title.is-clearfix')
+        papers = await self.search_papers(
+            query=query, 
+            max_results=max_results, 
+            categories=categories,
+            date_from=date_from,
+            date_to=date_to
+        )
         
-        if results_message and "No results" in results_message.text:
-            return []
-            
-        paper_links = []
-        for result in soup.select('li.arxiv-result'):
-            link_elem = result.select_one('p.list-title.is-inline-block a[href*="/abs/"]')
-            if link_elem and link_elem.get('href'):
-                paper_links.append(urljoin(self.BASE_URL, link_elem.get('href')))
-                
-        return paper_links
-
-    async def extract_paper_details(self, paper_url: str) -> Optional[Dict]:
-        """Extract all required details from individual paper page"""
-        html = await self.fetch_page(paper_url)
-        
-        if not html:
-            return None
-            
-        soup = BeautifulSoup(html, 'html.parser')
-        
-        title_elem = soup.select_one('h1.title')
-        title = title_elem.get_text(strip=True).replace("Title:", "") if title_elem else "N/A"
-        
-        authors_elem = soup.select_one('div.authors')
-        authors = []
-        if authors_elem:
-            author_links = authors_elem.select('a[href*="searchtype=author"]')
-            authors = [a.get_text(strip=True) for a in author_links]
-        
-        abstract_elem = soup.select_one('blockquote.abstract')
-        abstract = abstract_elem.get_text(strip=True).replace("Abstract:", "") if abstract_elem else "N/A"
-        
-        journal_elem = soup.select_one('td.tablecell:-soup-contains("Journal ref:")')
-        journal = journal_elem.find_next_sibling('td').get_text(strip=True) if journal_elem else "N/A"
-        
-        publisher = "arXiv"
-        breadcrumbs = soup.select_one('div.header-breadcrumbs')
-        if breadcrumbs:
-            breadcrumb_text = breadcrumbs.get_text(strip=True)
-            if "arXiv:" in breadcrumb_text:
-                publisher = "arXiv"
-        
-        year = "N/A"
-        date_elem = soup.select_one('div.dateline')
-        if date_elem:
-            date_match = re.search(r'\d{1,2} [A-Za-z]+ (\d{4})', date_elem.get_text())
-            if date_match:
-                year = date_match.group(1)
-        
-        doi = "N/A"
-        doi_elem = soup.select_one('a#arxiv-doi-link')
-        if doi_elem:
-            doi = doi_elem.get_text(strip=True)
-        
-        group_name = "N/A"
-        subject_elem = soup.select_one('span.primary-subject')
-        if subject_elem:
-            group_name = subject_elem.get_text(strip=True)
-        
-        return {
-            "Title": title,
-            "Authors": ", ".join(authors),
-            "Abstract": abstract,
-            "Journal_Conference_Name": journal,
-            "Publisher": publisher,
-            "Year": year,
-            "DOI": doi,
-            "Group_Name": group_name
-        }
-
-    async def crawl_papers(self) -> List[Tuple[str, str, str]]:
-        """Crawl semua paper tanpa batas"""
-        all_papers = []
-        start = 0
-        page = 1
-        
-        while True:
-            print(f"Mengambil data dari halaman {page}...")
-            paper_links = await self.get_paper_links(start)
-            
-            if not paper_links:
-                print("Tidak ada hasil lagi. Proses dihentikan.")
-                break
-                
-            tasks = [self.extract_paper_details(link) for link in paper_links]
-            results = await asyncio.gather(*tasks)
-            
-            valid_papers = [paper for paper in results if paper is not None]
-            all_papers.extend(valid_papers)
-            
-            print(f"Berhasil mengambil {len(valid_papers)} paper dari halaman {page}")
-            
-            start += 200 
-            page += 1
-            
-            await asyncio.sleep(3)
-            
-        return all_papers
+        print(f"Total berhasil mengambil {len(papers)} paper")
+        return papers
