@@ -18,3 +18,8 @@ mlflow
 bertopic
 fastapi
 arxiv
+gensim
+mlflow
+fastapi
+sentence-transformers
+tqdm

@@ -2,8 +2,9 @@ import os
 import sys
 import logging
 import traceback
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 sys.path.append(str(Path(__file__).parent.parent))
 from src.data.preprocessing import JSONPreprocessor
@@ -16,7 +17,6 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-
 
 def main():
     try:
@@ -34,31 +34,25 @@ def main():
         processor = JSONPreprocessor()
 
         logging.info("Starting preprocessing...")
-        logging.info(f"Input: {INPUT_PATH}")
+        logging.info(f"Input CSV: {INPUT_PATH}")
         logging.info(f"Output JSON: {OUTPUT_JSON_PATH}")
         logging.info(f"Output CSV: {OUTPUT_CSV_PATH}")
 
-        # Proses ke JSON
+        # Run full preprocessing to JSON
         processor.process_to_json(
             input_csv=str(INPUT_PATH),
             output_json=str(OUTPUT_JSON_PATH)
         )
 
-        df = pd.read_csv(INPUT_PATH)
-        df_cleaned = df.copy()
+        # Optional: Load JSON and write cleaned CSV version (flattened)
+        with open(OUTPUT_JSON_PATH, 'r', encoding='utf-8') as f:
+            cleaned_data = pd.read_json(f)
 
-        if 'Title' in df_cleaned.columns:
-            df_cleaned['Title'] = df_cleaned['Title'].str.strip()
-            df_cleaned['Title'] = df_cleaned['Title'].str.replace(r'\s+', ' ', regex=True)
-
-        if 'Authors' in df_cleaned.columns:
-            df_cleaned['Authors'] = df_cleaned['Authors'].str.strip()
-
-        df_cleaned.to_csv(OUTPUT_CSV_PATH, index=False)
+        cleaned_data.to_csv(OUTPUT_CSV_PATH, index=False)
 
         logging.info("Preprocessing completed successfully")
-        logging.info(f"JSON output file size: {OUTPUT_JSON_PATH.stat().st_size} bytes")
-        logging.info(f"CSV output file size: {OUTPUT_CSV_PATH.stat().st_size} bytes")
+        logging.info(f"JSON output size: {OUTPUT_JSON_PATH.stat().st_size} bytes")
+        logging.info(f"CSV output size: {OUTPUT_CSV_PATH.stat().st_size} bytes")
 
     except Exception as e:
         logging.error(f"Error occurred: {str(e)}")
