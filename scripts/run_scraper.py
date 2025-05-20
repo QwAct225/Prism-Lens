@@ -5,11 +5,18 @@ import sys
 import argparse
 from datetime import datetime
 import pandas as pd
+from prometheus_client import start_http_server
+import threading
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, project_root)
 
 from src.data.scraper import ArXivScraper
+
+def start_metrics_server(port=8001):
+    """Start Prometheus metrics server in a separate thread"""
+    start_http_server(port, addr="0.0.0.0")  
+    print(f"Prometheus metrics available on http://0.0.0.0:{port}/metrics")
 
 async def main():
     parser = argparse.ArgumentParser(description='Scrape ArXiv papers')
@@ -22,8 +29,14 @@ async def main():
     parser.add_argument('--job-id', type=str, help='Job ID for API tracking')
     parser.add_argument('--preprocess', action='store_true', help='Preprocess the results')
     parser.add_argument('--append', action='store_true', default=True, help='Append to existing file')
+    parser.add_argument('--metrics-port', type=int, default=8001, help='Port for Prometheus metrics')
     
     args = parser.parse_args()
+    
+    # Start the metrics server
+    metrics_thread = threading.Thread(target=start_metrics_server, args=(args.metrics_port,))
+    metrics_thread.daemon = True
+    metrics_thread.start()
     
     categories = None
     if args.categories:
@@ -46,7 +59,7 @@ async def main():
     
     duration = datetime.now() - start_time
     print(f"Scraping completed in {duration.total_seconds()/60:.2f} minutes")
-    
+
     output_dir = os.path.join(project_root, 'data', 'raw')
     os.makedirs(output_dir, exist_ok=True)
     
