@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6891dfae-5390-4910-aa3a-2518d450ec67" name="Changes" comment="feat(api): add API endpoint configurationusing FastAPI">
-      <change beforePath="$PROJECT_DIR$/src/data/embedding.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/embedding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arxiv_scraping.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/processed/arxiv_papers_cleaned.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/processed/arxiv_papers_cleaned.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/raw/arxiv_papers_raw.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/raw/arxiv_papers_raw.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebook/experiment.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/preprocessing.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_scraper.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/run_scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/run_scraper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,23 +63,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feat/api-endpoint",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Danann\1. Projects\2. Machine Learning\Python\Prism-Lens" />
+      <recent name="C:\Danann\1. Projects\2. Machine Learning\Python\Prism-Lens\api" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -103,6 +114,8 @@
       <workItem from="1747479736921" duration="2203000" />
       <workItem from="1747482211899" duration="223000" />
       <workItem from="1747487335658" duration="10288000" />
+      <workItem from="1750336492746" duration="5687000" />
+      <workItem from="1750342568949" duration="1063000" />
     </task>
     <servers />
   </component>

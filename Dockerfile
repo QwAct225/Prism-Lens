@@ -2,6 +2,7 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+ENV PYTHONPATH /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -18,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 RUN python -c "import uvicorn; print(f'uvicorn version: {uvicorn.__version__}')"
 
 # Copy the entire project
-COPY . .
+COPY .. .
 
 # Make sure scripts directory is executable
 RUN chmod +x scripts/*.py 2>/dev/null || true

@@ -6,12 +6,12 @@ import argparse
 from datetime import datetime
 import pandas as pd
 from prometheus_client import start_http_server
+from src.data.scraper import ArXivScraper
 import threading
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, project_root)
 
-from src.data.scraper import ArXivScraper
 
 def start_metrics_server(port=8001):
     """Start Prometheus metrics server in a separate thread"""
